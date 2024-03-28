@@ -1,27 +1,26 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const reportSchema = new Schema({
+const reviewSchema = new Schema({
 
-  user_id: {
-    type: String,
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+},
+userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+},
+rating: {
+    type: Number,
     required: true,
-    unique: true
-  },
-
-  coach_id: {
-  type: String,
-  required: true,
-  unique: true
-  },
-
-  date: {
-  type: Date
-  },
-
-  comment: {
-  type: String
-  },
+    min: 1,
+    max: 5
+},
+comment: {
+    type: String,
+    required: true
+}
     
 },
 
@@ -35,4 +34,4 @@ const reportSchema = new Schema({
   }
 },{timestamps: true});
 
-module.exports = report = mongoose.model('report', reportSchema);
+module.exports = report = mongoose.model('review', reviewSchema);
