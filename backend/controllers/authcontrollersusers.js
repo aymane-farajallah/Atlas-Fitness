@@ -4,7 +4,6 @@ const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
 const port = 3111 ; 
 
-// Register function
 registerUser = async (req, res) => {
   try {
     const { fullname, email, password, gender } = req.body;
@@ -19,12 +18,12 @@ registerUser = async (req, res) => {
       email,
       password,
       gender
+
     });
-    // Hash and secure password
+    
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(newUser.password, salt);
 
-    // Save new user to database
     await newUser.save();
 
     res.json({ message: "User registered successfully" });

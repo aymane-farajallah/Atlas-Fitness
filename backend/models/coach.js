@@ -23,7 +23,7 @@ const coachSchema = new Schema({
   role: {
   type: String,
   required: true,
-  enum: ['user','admin'],
+  enum: ['user','admin','coach'],
   default: 'user'
   },
 

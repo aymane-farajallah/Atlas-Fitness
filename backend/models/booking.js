@@ -2,32 +2,48 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const bookingSchema = new Schema({
-
   user_id: {
-    type: String,
-    required: true,
-    unique: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-
+  coach_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Coach',
+    required: true
+  },
   date: {
-  type: Date
+    type: Date,
+    default: Date.now
   },
-
   price: {
-  type: Number
+    type: Number,
+    required: true
   },
-
-},
-
-{
-     toJSON: {
-      transform(doc,ret){
-        delete ret._id;
-        delete ret.date;
-        delete ret.__v;
-        delete ret.updatedAt;
+  session: {
+    type: String 
+  }
+}, {
+  toJSON: {
+    transform(doc, ret) {
+      delete ret._id;
+      delete ret.__v;
     }
   }
-},{timestamps: true});
+}, { timestamps: true });
 
-module.exports = booking = mongoose.model('booking', bookingSchema);
+bookingSchema.pre('save', function (next) {
+  // Get date components
+  const year = this.date.getFullYear();
+  const month = String(this.date.getMonth() + 1).padStart(2, '0');
+  const day = String(this.date.getDate()).padStart(2, '0');
+  const hours = String(this.date.getHours()).padStart(2, '0');
+  const minutes = String(this.date.getMinutes()).padStart(2, '0');
+
+  // Construct formatted date string
+  this.date = `${year}/${month}/${day} // ${hours}/${minutes}`;
+
+  next();
+});
+
+module.exports = mongoose.model('Booking', bookingSchema);
