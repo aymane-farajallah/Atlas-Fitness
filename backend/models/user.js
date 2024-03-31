@@ -37,6 +37,9 @@ const userSchema = new Schema({
   city: {
     type: String
   },
+  location: {
+    type: String
+  },
   bank_details: {
     type: String
   },

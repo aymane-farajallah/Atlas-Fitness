@@ -11,6 +11,14 @@ const getCheckoutSession = async (req,res) => {
         const user = await User.findById(req.body.user_id)     
         const stripe = new Stripe(Stripe_Key);
 
+        const sessionType = req.body.session_type;
+        let location = '';
+        if (sessionType === 'in-person') {
+            location = user.location ;
+        } else if(sessionType === 'online'){
+            location = 'Google Meet';
+        }
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types:['card'],
             mode:'payment',
@@ -39,6 +47,8 @@ const getCheckoutSession = async (req,res) => {
             user_id: user._id,
             price: coach.price,
             session: session.id,
+            sessionType,
+            location
         })
 
         await booking.save()
@@ -54,6 +64,62 @@ const getCheckoutSession = async (req,res) => {
 
 }
 
+const getAllBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find();
+
+        res.status(200).json({bookings});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to retrieve bookings' });
+    }
+};
+
+const getBookingById = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+
+        res.status(200).json({booking});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to update booking' });
+    }
+};
+
+const updateBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        await CalendarService.updateBookingInCalendar(booking);
+
+        res.status(200).json({ success: true, data: booking });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to update booking' });
+    }
+};
+
+const deleteBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findByIdAndDelete(req.params.id);
+        if(!booking){
+        res.status(404).json({message:'Booking Not Found'});
+        }
+
+        res.status(200).json({ success: true, data: {message: 'Booking Deleted'} });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to delete booking' });
+    }
+};
+
 module.exports = {
-    getCheckoutSession
+    getCheckoutSession,
+    deleteBooking,
+    updateBooking,
+    getAllBookings,
+    getBookingById
 }

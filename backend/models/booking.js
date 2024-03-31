@@ -16,9 +16,17 @@ const bookingSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  sessionType: {
+    type: String,
+    enum: ['online', 'in-person'],
+    required: true
+  },
   price: {
     type: Number,
     required: true
+  },
+  location: {
+    type: String,
   },
   session: {
     type: String 
