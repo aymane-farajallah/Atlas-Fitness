@@ -69,4 +69,4 @@ const workout_trackingSchema = new Schema({
   }
 },{timestamps: true});
 
-module.exports = workout_tracking = mongoose.model('workout_tracking', workout_trackingSchema);
+module.exports = workout_tracking = mongoose.model('Workout', workout_trackingSchema);
