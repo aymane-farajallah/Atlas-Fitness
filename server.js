@@ -21,7 +21,7 @@ app.use("/api", authroutesuser);
 app.use("/api", authroutescoach);
 app.use("/reviews", reviewRoute);
 app.use("/workout", workoutRoute);
-app.use("/message", messageRoute);
+app.use("/messages", messageRoute);
 
 
 app.listen(port , (req , res)=>{

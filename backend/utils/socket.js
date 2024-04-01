@@ -17,14 +17,14 @@ const io = new Server(server, {
 // Function to get recipient's socket ID, considering user/coach type
 export const getRecipientSocketId = (recipientId, isCoach) => {
   if (isCoach) {
-    return coachSocketMap[recipientId]; // Example using coachSocketMap
+    return coachSocketMap[recipientId]; 
   } else {
     return userSocketMap[recipientId];
   }
 };
 
 const userSocketMap = {}; // userId: socketId
-const coachSocketMap = {}; // coachId: socketId (example)
+const coachSocketMap = {};
 
 io.on("connection", (socket) => {
   console.log("user connected", socket.id);
