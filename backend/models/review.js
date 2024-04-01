@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
 
-  productId: {
+  coachId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
 },

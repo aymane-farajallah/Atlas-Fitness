@@ -1,6 +1,4 @@
 const nodemailer = require("nodemailer");
-const express = require("express");
-
 const sendMailUser = async ({ userEmail, resetLink }) => {
   return new Promise((resolve, reject) => {
     console.log("email sending", userEmail);

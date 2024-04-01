@@ -1,42 +1,74 @@
 const express = require("express");
-const reviewModel = require("../models/review");
-const { extractUserId, reviewSave } = require('../middlewares/reviewChecker');
+const review = require("../models/review");
+const user = require("../models/user.js");
+const coach = require("../models/coach");
 
-const reviewRoute = express.Router();
-reviewRoute.use(express.json());
 
 // Get all reviews
-reviewRoute.get('/review', extractUserId, async (req, res) => {
+const getReviews = async (req,res)=>{
     try {
-        const reviews = await reviewModel.find();
-        res.json(reviews);
+        const Reviews = await review.find();
+        const reviewCount = await review.countDocuments();
+        if (!reviewCount) {
+            return res.status(404).json({ error: 'Reviews not found' });
+        }
+        res.status(200).json({
+            status:'success' ,
+            TotalReviews : reviewCount,
+            Reviews : Reviews
+        })
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: error.message });
     }
-});
+}
 
 // Get a specific review
-reviewRoute.get('/review/:id', extractUserId, async (req, res) => {
+const getReviewById = async (req,res) =>{
     try {
-        const review = await reviewModel.findById(req.params.id);
-        if (!review) {
-            return res.status(404).json({ message: 'Review not found' });
+        const Review = await review.findById(req.params.id);
+        if (!Review) {
+            return res.status(404).json({ error: 'Review not found' });
         }
-        res.json(review);
+        res.status(200).json({
+            status:'success' ,
+            review : Review
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        if (error.name === 'CastError') {
+            return res.status(404).json({ error: 'Review not found' });
+        }
+        res.status(500).json({ error: error.message });
     }
-});
+}
+
 
 // Create a new review
-reviewRoute.post('/review', extractUserId, reviewSave, async (req, res) => {
-    res.status(201).json({ message: "Review created successfully" });
-});
+const createReview = async(req,res)=>{
+    try {
+        let UserId = req.user ;
+        const {coachId, rating,comment} = req.body
+
+        const newReview = await review.create({ userID: user._id , coachID : coachId, rating, comment });
+        res.status(201).json({
+            status:'success' ,
+            Review : newReview
+        });
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            // Handle Mongoose errors
+            return res.status(400).json({ error: error.message });
+        } else {
+            // Handle other errors
+            res.status(500).json({ error: error.message });
+        }
+    }
+}
+
 
 // Update a review
-reviewRoute.patch('/review/:id', extractUserId, async (req, res) => {
+const patchReview = async (req, res) => {
     try {
-        const review = await reviewModel.findByIdAndUpdate(req.params.id, req.body, {
+        const review = await review.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         });
@@ -47,12 +79,12 @@ reviewRoute.patch('/review/:id', extractUserId, async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-});
+};
 
 // Delete a review
-reviewRoute.delete('/review/:id', extractUserId, async (req, res) => {
+const deleteReview = async (req, res) => {
     try {
-        const review = await reviewModel.findByIdAndDelete(req.params.id);
+        const review = await review.findByIdAndDelete(req.params.id);
         if (!review) {
             return res.status(404).json({ message: 'Review not found' });
         }
@@ -60,6 +92,12 @@ reviewRoute.delete('/review/:id', extractUserId, async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-});
+};
 
-module.exports = reviewRoute;
+module.exports = {
+    getReviews,
+    getReviewById,
+    createReview,
+    patchReview,
+    deleteReview
+};

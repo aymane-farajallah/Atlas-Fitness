@@ -8,7 +8,7 @@ exports.extractUserId = (req, res, next) => {
     }
 
     const tokenId = token.replace('Bearer ', '');
-    jwt.verify(tokenId, 'RKKLIO939092DJXJIAOIU4N12M', async (error, decoded) => {
+    jwt.verify(tokenId, process.env.JWT_TOKEN_VERIFY, async (error, decoded) => {
         if (error) {
             return res.status(401).json({ error: 'Invalid token' });
         } else {
