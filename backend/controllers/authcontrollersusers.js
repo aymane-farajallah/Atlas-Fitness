@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
-const port = 3111 ; 
 
 registerUser = async (req, res) => {
   try {
