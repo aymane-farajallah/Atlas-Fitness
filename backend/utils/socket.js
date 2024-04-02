@@ -1,8 +1,8 @@
-import { Server } from "socket.io";
-import http from "http";
-import express from "express";
-import Message from "../models/message.js";
-import Conversation from "../models/conversation.js";
+const { Server } =require( "socket.io");
+const http =require( "http");
+const express =require( "express");
+const Message =require( "../models/message.js");
+const Conversation =require( "../models/conversation.js");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,7 +15,7 @@ const io = new Server(server, {
 });
 
 // Function to get recipient's socket ID, considering user/coach type
-export const getRecipientSocketId = (recipientId, isCoach) => {
+const getRecipientSocketId = (recipientId, isCoach) => {
   if (isCoach) {
     return coachSocketMap[recipientId]; 
   } else {
@@ -69,4 +69,4 @@ io.on("connection", (socket) => {
   });
 });
 
-export { io, server, app };
+module.exports = { io, server, app , getRecipientSocketId };

@@ -1,6 +1,6 @@
-import User from "../models/userModel.js";
-import Coach from "../models/coachModel.js"; // Assuming you have a Coach model
-import jwt from "jsonwebtoken";
+const User  = require( "../models/user.js");
+const Coach = require("../models/coach.js"); // Assuming you have a Coach model
+const jwt = require("jsonwebtoken");
 
 const protectRoute = async (req, res, next) => {
   try {
@@ -31,4 +31,4 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-export default protectRoute;
+module.exports = protectRoute;

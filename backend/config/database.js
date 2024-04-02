@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect("mongodb://localhost:27017/ATLAS-FITNESS")
 .then(() => {
     console.log('Database connected successfully');
 })

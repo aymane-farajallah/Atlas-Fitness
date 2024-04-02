@@ -16,8 +16,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "paypal-rest-sdk": "^1.8.1",
-    "stripe": "^14.22.0",
-    "passport-google-oauth20": "^2.0.0"
+    "socket.io": "^4.7.5",
+    "stripe": "^14.22.0"
   },
   "scripts": {
     "start": "node server.js",

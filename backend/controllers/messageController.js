@@ -1,7 +1,7 @@
-import Conversation from "../models/conversation.js";
-import Message from "../models/message.js";
-import { getRecipientSocketId, io } from "../utils/socket.js";
-import { v2 as cloudinary } from "cloudinary";
+const Conversation = require( "../models/conversation.js");
+const Message = require( "../models/message.js");
+const { getRecipientSocketId, io } = require( "../utils/socket.js");
+const cloudinary = require("cloudinary").v2 ;
 
 async function sendMessage(req, res) {
   try {
@@ -111,4 +111,4 @@ async function getConversations(req, res) {
   }
 }
 
-export { sendMessage, getMessages, getConversations };
+module.exports = { sendMessage, getMessages, getConversations };
