@@ -1,10 +1,10 @@
-import express from "express";
-import protectRoute from "../middlewares/protectRoute.js";
-import {
+const  express = require("express");
+const protectRoute =  require("../middlewares/protectRoute.js");
+const {
   getMessages,
   sendMessage,
   getConversations,
-} from "../controllers/messageController.js";
+} =  require( "../controllers/messageController.js");
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.get("/conversations", protectRoute, getConversations);
 router.get("/:otherUserId/:isCoach", protectRoute, getMessages);
 router.post("/", protectRoute, sendMessage);
 
-export default router;
+module.exports =  router;
