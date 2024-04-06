@@ -15,10 +15,10 @@ reviewRoute.get('/review', isAuthenticated, checkAdmin , extractUserId, reviewCo
 reviewRoute.get('/review/:id', isAuthenticated, checkUser  , checkAdmin , checkCoach , extractUserId, reviewControllers.getReviewById);
 
 // Create a new review
-reviewRoute.post('/review', isAuthenticated, checkUser , checkCoach , extractUserId, reviewControllers.createReview);
+reviewRoute.post('/review/:id', isAuthenticated, checkUser , reviewControllers.createReview);
 
 // Update a review
-reviewRoute.patch('/review/:id', isAuthenticated, checkUser , checkCoach , checkAdmin , extractUserId, reviewControllers.patchReview);
+reviewRoute.patch('/review/:id', isAuthenticated, checkUser, extractUserId, reviewControllers.patchReview);
 
 // Delete a review
 reviewRoute.delete('/review/:id', isAuthenticated, checkUser , checkCoach , checkAdmin , extractUserId, reviewControllers.deleteReview);

@@ -1,5 +1,6 @@
 const review = require("../models/review");
 const user = require("../models/user.js");
+const jwt = require('jsonwebtoken');
 
 // Get all reviews
 const getReviews = async (req,res)=>{
@@ -42,14 +43,27 @@ const getReviewById = async (req,res) =>{
 // Create a new review
 const createReview = async(req,res)=>{
     try {
-        let UserId = req.user ;
-        const {coachId, rating , comment} = req.body
-
-        const newReview = await review.create({ userID: user._id , coachID : coachId, rating, comment });
-        res.status(201).json({
-            status:'success' ,
-            Review : newReview
-        });
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token is missing or invalid' });
+      }
+  
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, 'secret');
+  
+      const userId = decoded.id;
+      const coachId = req.params.id;
+  
+       const newReview = new review({
+          coach_id: coachId,
+          user_id: userId,
+          rating : req.body.rating,
+          comment: req.body.comment
+      });
+  
+      await newReview.save()
+      res.status(200).json({success: true , message: 'Successfully reviewed'}); 
+  
     } catch (error) {
         if (error.name === 'ValidationError') {
             // Handle Mongoose errors
@@ -59,7 +73,7 @@ const createReview = async(req,res)=>{
             res.status(500).json({ error: error.message });
         }
     }
-}
+  }
 
 
 // Update a review
