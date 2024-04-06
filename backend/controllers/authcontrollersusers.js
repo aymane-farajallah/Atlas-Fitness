@@ -49,7 +49,7 @@ loginUser = (req, res) => {
           if (isMatch) {
             const payload = { id: user.id, name: user.name };
             //giving user a jwt token to the signin process of our user
-            jwt.sign(payload, "secret", { expiresIn: "7d" }, (err, token) => {
+            jwt.sign({ ...payload, role: user.role }, "secret", { expiresIn: "7d" }, (err, token) => {
               if (err) {
                 return res
                   .status(500)

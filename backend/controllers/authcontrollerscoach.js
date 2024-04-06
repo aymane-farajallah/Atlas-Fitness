@@ -52,7 +52,7 @@ logincoach = (req, res) => {
           if (isMatch) {
             const payload = { id: coach.id, name: coach.name };
             //giving coach a jwt token to the signin process of our coach
-            jwt.sign(payload, "secret", { expiresIn: "7d" }, (err, token) => {
+            jwt.sign({ ...payload, role: coach.role }, "secret", { expiresIn: "7d" }, (err, token) => {
               if (err) {
                 return res
                   .status(500)
