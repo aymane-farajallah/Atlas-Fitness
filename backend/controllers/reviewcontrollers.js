@@ -1,8 +1,5 @@
-const express = require("express");
 const review = require("../models/review");
 const user = require("../models/user.js");
-const coach = require("../models/coach");
-
 
 // Get all reviews
 const getReviews = async (req,res)=>{
@@ -46,7 +43,7 @@ const getReviewById = async (req,res) =>{
 const createReview = async(req,res)=>{
     try {
         let UserId = req.user ;
-        const {coachId, rating,comment} = req.body
+        const {coachId, rating , comment} = req.body
 
         const newReview = await review.create({ userID: user._id , coachID : coachId, rating, comment });
         res.status(201).json({

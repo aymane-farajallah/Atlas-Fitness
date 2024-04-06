@@ -1,22 +1,37 @@
-import Report from "../models/report.js";
+const jwt = require('jsonwebtoken');
+const accessTokenSecret = 'secret';
+const report = require("../models/report.js");
 
-// Create a new report
-async function createReport(req, res) {
+const createReport = async(req,res)=>{
   try {
-    const { userId, coachId, message, date } = req.body;
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token is missing or invalid' });
+    }
 
-    const newReport = new Report({
-      user_id: userId,
-      coach_id: coachId,
-      message: message,
-      date: date || new Date(), // Use provided date or current date
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, accessTokenSecret);
+
+    const userId = decoded.id;
+    const coachId = req.params.id;
+
+     const newReport = new report({
+        coach_id: coachId,
+        user_id: userId,
+        message: req.body.Message
     });
 
-    await newReport.save();
+    await newReport.save()
+    res.status(200).json({success: true , message: 'Successfully reported'}); 
 
-    res.status(201).json(newReport);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+      if (error.name === 'ValidationError') {
+          // Handle Mongoose errors
+          return res.status(400).json({ error: error.message });
+      } else {
+          // Handle other errors
+          res.status(500).json({ error: error.message });
+      }
   }
 }
 
@@ -52,4 +67,4 @@ async function getReportsByCoachId(req, res) {
   }
 }
 
-export { createReport, getReports, getReportsByUserId, getReportsByCoachId };
+module.exports = { createReport, getReports, getReportsByUserId, getReportsByCoachId };

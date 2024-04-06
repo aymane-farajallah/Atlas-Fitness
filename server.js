@@ -9,6 +9,7 @@ const userroutes = require('./backend/routes/userroutes');
 const bookingRoutes = require('./backend/routes/bookingroutes');
 const reviewRoute = require('./backend/routes/reviewroutes');
 const workoutRoute = require('./backend/routes/working-tracking-routes');
+const reportRoute = require('./backend/routes/reportroutes');
 const messageRoute = require('./backend/routes/messageRoute');
 const { app, server } = require("./backend/utils/socket");
 
@@ -22,7 +23,8 @@ App.use('/coaches', coachroutes);
 App.use("/api", authroutesuser);
 App.use("/api", authroutescoach);
 App.use("/api", bookingRoutes);
-App.use("/reviews", reviewRoute);
+App.use("/api", reviewRoute);
+App.use("/api", reportRoute);
 App.use("/workout", workoutRoute);
 App.use("/messages", messageRoute);
 

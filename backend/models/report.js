@@ -5,16 +5,14 @@ const reportSchema = new Schema({
 
   user_id: {
     type: String,
-    required: true
   },
 
   coach_id: {
   type: String,
-  required: true
   },
 
   message: {
-  type: String
+  type: String,
   },
 
   date: {

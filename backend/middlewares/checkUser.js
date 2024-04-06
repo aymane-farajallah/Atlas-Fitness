@@ -10,7 +10,7 @@ const checkUser = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, accessTokenSecret); // Verify token
+    const decoded = jwt.verify(token, accessTokenSecret);
 
     req.coach = decoded; // Attach decoded user to request
 
