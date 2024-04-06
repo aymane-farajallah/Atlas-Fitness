@@ -5,6 +5,7 @@ const port = 3111 ;
 const authroutesuser = require("./backend/routes/authroutesuser");
 const authroutescoach = require("./backend/routes/authroutescoach");
 const coachroutes = require('./backend/routes/coachroutes');
+const userroutes = require('./backend/routes/userroutes');
 const bookingRoutes = require('./backend/routes/bookingroutes');
 const reviewRoute = require('./backend/routes/reviewroutes');
 const workoutRoute = require('./backend/routes/working-tracking-routes');
@@ -16,7 +17,7 @@ App.use(express.json());
 require('dotenv').config();
 
 
-
+App.use('/users', userroutes);
 App.use('/coaches', coachroutes);
 App.use("/api", authroutesuser);
 App.use("/api", authroutescoach);

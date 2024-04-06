@@ -1,5 +1,5 @@
 const User  = require( "../models/user.js");
-const Coach = require("../models/coach.js"); // Assuming you have a Coach model
+const Coach = require("../models/coach.js");
 const jwt = require("jsonwebtoken");
 
 const protectRoute = async (req, res, next) => {
@@ -31,4 +31,41 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-module.exports = protectRoute;
+const isAuthenticated = (req, res, next) => {
+    try {
+        
+        if (!req.headers.authorization) {
+            throw new Error('Authorization header missing');
+        }
+        const token = req.headers.authorization.split(' ')[1];
+        
+       
+        const decodedToken = jwt.verify(token, 'secret');     
+        
+        req.auth = {
+            userId: decodedToken.id
+        };
+
+        
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(401).json({ message: "Not authorized" });
+    }
+};
+
+module.exports = (requiredRoles) => {
+  return (req, res, next) => {
+      const userRole = req.user.role;
+      if (requiredRoles.includes(userRole)) {
+          next();
+      } else {
+          res.status(403).json({ message: "Access denied" });
+      }
+  };
+};
+
+module.exports = {
+  protectRoute,
+  isAuthenticated
+};

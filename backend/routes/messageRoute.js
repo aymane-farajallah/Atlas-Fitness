@@ -1,5 +1,5 @@
 const  express = require("express");
-const protectRoute =  require("../middlewares/protectRoute.js");
+const {protectRoute} =  require("../middlewares/protectRoute.js");
 const {
   getMessages,
   sendMessage,

@@ -2,22 +2,24 @@ const express = require("express");
 const reviewControllers = require("../controllers/reviewcontrollers");
 const { extractUserId } = require('../middlewares/reviewChecker');
 const reviewRoute = express.Router();
-
+const {isAuthenticated} = require('../middlewares/protectRoute');
+const checkUser = require("../middlewares/checkUser");
+const checkCoach = require("../middlewares/checkCoach");
 reviewRoute.use(express.json());
 
 // Get all reviews
-reviewRoute.get('/review', extractUserId, reviewControllers.getReviews);
+reviewRoute.get('/review', isAuthenticated, extractUserId, reviewControllers.getReviews);
 
 // Get a specific review
-reviewRoute.get('/review/:id', extractUserId, reviewControllers.getReviewById);
+reviewRoute.get('/review/:id', isAuthenticated, checkUser , checkCoach , extractUserId, reviewControllers.getReviewById);
 
 // Create a new review
-reviewRoute.post('/review', extractUserId, reviewControllers.createReview);
+reviewRoute.post('/review', isAuthenticated, checkUser , checkCoach , extractUserId, reviewControllers.createReview);
 
 // Update a review
-reviewRoute.patch('/review/:id', extractUserId, reviewControllers.patchReview);
+reviewRoute.patch('/review/:id', isAuthenticated, checkUser , checkCoach , extractUserId, reviewControllers.patchReview);
 
 // Delete a review
-reviewRoute.delete('/review/:id', extractUserId, reviewControllers.deleteReview);
+reviewRoute.delete('/review/:id', isAuthenticated, checkUser , checkCoach , extractUserId, reviewControllers.deleteReview);
 
 module.exports = reviewRoute;
