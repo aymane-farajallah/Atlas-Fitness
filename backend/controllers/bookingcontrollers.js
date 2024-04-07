@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Coach = require('../models/coach');
 const Booking = require('../models/booking');
+const jwt = require('jsonwebtoken');
 const Stripe_Key = "sk_test_51NDw4VFcu0DV17ntoET434fmRVMakCc3fBnksrg8h0mzVwkOz3FpUpke3iYJe6DbBO4adbXXdr4luWdVJo5XinAi00so0l8EP3";
 const Stripe = require("stripe");
 
@@ -8,7 +9,15 @@ const getCheckoutSession = async (req,res) => {
     try{
 
         const coach = await Coach.findById(req.params.coach_id)      
-        const user = await User.findById(req.body.user_id)     
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token is missing or invalid' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, 'secret');
+
+        const user = decoded.id;  
         const stripe = new Stripe(Stripe_Key);
 
         const sessionType = req.body.session_type;
@@ -37,14 +46,14 @@ const getCheckoutSession = async (req,res) => {
 
                         }
                     },
-                    quantity : 11
+                    quantity : 1
                 }
             ]
         }) 
 
         const booking = new Booking({
             coach_id: coach._id,
-            user_id: user._id,
+            user_id: user,
             price: coach.price,
             session: session.id,
             sessionType,

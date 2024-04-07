@@ -5,7 +5,6 @@ const bookingSchema = new Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
   },
   coach_id: {
     type: mongoose.Schema.Types.ObjectId,
