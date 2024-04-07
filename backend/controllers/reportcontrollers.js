@@ -2,6 +2,23 @@ const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'secret';
 const report = require("../models/report.js");
 
+const getReports = async (req,res)=>{
+  try {
+      const Reports = await report.find();
+      const reportCount = await report.countDocuments();
+      if (!reportCount) {
+          return res.status(404).json({ error: 'Reports not found' });
+      }
+      res.status(200).json({
+          status:'success' ,
+          TotalReports : reportCount,
+          Reports : Reports
+      })
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+}
+
 const createReport = async(req,res)=>{
   try {
     const authHeader = req.headers.authorization;
@@ -35,32 +52,22 @@ const createReport = async(req,res)=>{
   }
 }
 
-// Get all reports
-async function getReports(req, res) {
+// Get reports of a specific user
+const getReportsByUserId = async (req, res) => {
   try {
-    const reports = await Report.find({});
+    const userId = req.params.id;
+    const reports = await report.find({ user_id: userId });
     res.status(200).json(reports);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
-// Get reports by user ID
-async function getReportsByUserId(req, res) {
-  try {
-    const { userId } = req.params;
-    const reports = await Report.find({ user_id: userId });
-    res.status(200).json(reports);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-// Get reports by coach ID
+// Get reports of a coach
 async function getReportsByCoachId(req, res) {
   try {
-    const { coachId } = req.params;
-    const reports = await Report.find({ coach_id: coachId });
+    const  coachId  = req.params.id;
+    const reports = await report.find({ coach_id: coachId });
     res.status(200).json(reports);
   } catch (error) {
     res.status(500).json({ error: error.message });
