@@ -12,15 +12,15 @@ reviewRoute.use(express.json());
 reviewRoute.get('/review', isAuthenticated, checkAdmin , extractUserId, reviewControllers.getReviews);
 
 // Get a specific review
-reviewRoute.get('/review/:id', isAuthenticated, checkUser  , checkAdmin , checkCoach , extractUserId, reviewControllers.getReviewById);
+reviewRoute.get('/review/:id', isAuthenticated, extractUserId, reviewControllers.getReviewById);
 
 // Create a new review
-reviewRoute.post('/review/:id', isAuthenticated, checkUser , reviewControllers.createReview);
+reviewRoute.post('/review/:id', isAuthenticated, reviewControllers.createReview);
 
 // Update a review
-reviewRoute.put('/review/:id', isAuthenticated, checkUser, extractUserId, reviewControllers.patchReview);
+reviewRoute.put('/review/:id', isAuthenticated, extractUserId, reviewControllers.patchReview);
 
 // Delete a review
-reviewRoute.delete('/review/:id', isAuthenticated, checkUser , checkCoach , checkAdmin , extractUserId, reviewControllers.deleteReview);
+reviewRoute.delete('/review/:id', isAuthenticated, extractUserId, reviewControllers.deleteReview);
 
 module.exports = reviewRoute;

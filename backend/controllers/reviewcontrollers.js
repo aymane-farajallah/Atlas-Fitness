@@ -1,5 +1,4 @@
 const review = require("../models/review");
-const user = require("../models/user.js");
 const jwt = require('jsonwebtoken');
 
 // Get all reviews

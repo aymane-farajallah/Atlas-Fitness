@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'secret';
-const user = require("../models/user.js");
 
 const checkUser = (req, res, next) => {
   try {
