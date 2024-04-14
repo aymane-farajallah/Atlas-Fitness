@@ -67,7 +67,7 @@ const coachSchema = new Schema({
   type: Number  
   },
 
-  diploma: {
+  cv: {
   type: String  
   },
   

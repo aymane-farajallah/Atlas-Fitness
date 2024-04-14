@@ -3,13 +3,11 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
 
-  coachId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true
+  coach_id: {
+    type: String,
 },
-userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true
+user_id: {
+  type: String,
 },
 rating: {
     type: Number,

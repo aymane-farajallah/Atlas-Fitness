@@ -10,11 +10,11 @@ const {
 } = require("../controllers/workout-tracking-controllers");
 
 //get all workouts
-workoutRouter.get("/workout", isAuthenticated, getWorkouts);
+workoutRouter.get("/workouts", isAuthenticated, getWorkouts);
 // get a specific workout
 workoutRouter.get("/workout:id", isAuthenticated, getWorkout);
 // post a workout
-workoutRouter.post("/workout", isAuthenticated, createWorkout);
+workoutRouter.post("/postworkout", isAuthenticated, createWorkout);
 // delete a workout
 workoutRouter.delete("/workout:id", isAuthenticated, deleteWorkout);
 //update a part of a workout

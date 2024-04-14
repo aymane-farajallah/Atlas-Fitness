@@ -3,6 +3,48 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
 
+/**
+ * @swagger
+ * /api/regiteruser:
+ *   post:
+ *     summary: Register a User
+ *     description: Allows a user to register with the platform.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullname:
+ *                 type: string
+ *                 description: user's full name
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 description: user's email address
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 description: user's password
+ *               gender:
+ *                 type: string
+ *                 description: user's gender 
+ *               city:
+ *                 type: string
+ *                 description: user's city 
+ *               address:
+ *                 type: string
+ *                 description: user's address 
+ *     responses:
+ *       200:
+ *         description: user registered successfully
+ *       400:
+ *         description: user already exists or validation error
+ *       500:
+ *         description: Internal server error
+ */
+
 registerUser = async (req, res) => {
   try {
     const { fullname, email, password, gender } = req.body;
@@ -32,6 +74,49 @@ registerUser = async (req, res) => {
 
   }
 };
+
+/**
+ * @swagger
+ * /api/loginuser:
+ *   post:
+ *     summary: Login a User
+ *     description: Allows a registered user to login to the platform.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: user's registered email address used for login. (Matches the 'email' field in the user model)
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 description: user's password. (Not stored in plain text, but a hashed version. Matches the 'password' field in the user model)
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Login success indicator
+ *                 token:
+ *                   type: string
+ *                   description: JWT access token (prefixed with "Bearer ")
+ *       400:
+ *         description: Bad Request (missing fields, invalid credentials)
+ *       404:
+ *         description: user not found (user with the provided email address not found in the database)
+ *       500:
+ *         description: Internal server error
+ */
 
 // Login function
 loginUser = (req, res) => {
@@ -74,6 +159,40 @@ loginUser = (req, res) => {
     );
 };
 
+/**
+ * @swagger
+ * /api/U-forgot-password:
+ *   post:
+ *     summary: Initiate Password Reset for user
+ *     description: Allows a user to request a password reset link via email.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: user's registered email address.
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Password reset email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message indicating email sent
+ *       404:
+ *         description: user not found (user with the provided email address not found in the database)
+ *       500:
+ *         description: Internal server error (e.g., email sending failure)
+ */
+
 // Forgot password function
 forgotPassword = (req, res) => {
   //asking for the email of our user and checking if it exists
@@ -107,6 +226,49 @@ forgotPassword = (req, res) => {
       return res.status(500).json({ err: "Internal server error" });
     });
 };
+
+/**
+ * @swagger
+ * /api/reset-U/:id:
+ *   put:
+ *     summary: Reset user Password
+ *     description: Allows a user to reset their password using a provided reset link (ID).
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: user's unique identifier from the reset password link.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: user's new password.
+ *                 example: password123!
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message indicating password reset
+ *       400:
+ *         description: Bad Request (missing new password)
+ *       404:
+ *         description: user not found (user with the provided ID not found in the database)
+ *       500:
+ *         description: Internal server error (e.g., database error)
+ */
 
 resetPassword = async (req, res) => {
   try {

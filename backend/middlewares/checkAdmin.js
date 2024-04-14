@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'secret';
+const user = require("../models/user.js");
 
-const checkUser = (req, res, next) => {
+const checkAdmin = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -9,12 +10,12 @@ const checkUser = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, accessTokenSecret);
+    const decoded = jwt.verify(token, accessTokenSecret); // Verify token
 
     req.coach = decoded; // Attach decoded user to request
 
     // Check for coach role directly from decoded token
-    if (decoded.role !== 'user') {
+    if (decoded.role !== 'admin') {
       return res.status(403).json({ error: 'Unauthorized' });
     }
 
@@ -25,4 +26,4 @@ const checkUser = (req, res, next) => {
   }
 };
 
-module.exports = checkUser;
+module.exports = checkAdmin;

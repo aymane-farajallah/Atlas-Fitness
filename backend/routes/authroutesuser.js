@@ -6,7 +6,7 @@ const {isAuthenticated} = require('../middlewares/protectRoute')
 
 authRouter.post("/loginuser", authController.loginUser);
 authRouter.post("/registeruser", authController.registerUser);
-authRouter.patch("/reset/:id", isAuthenticated , checkUser, authController.resetPassword);
-authRouter.post("/forgot-password", isAuthenticated ,  checkUser ,authController.forgotPassword);
+authRouter.patch("/reset-U/:id", isAuthenticated , checkUser, authController.resetPassword);
+authRouter.post("/U-forgot-password", isAuthenticated ,  checkUser ,authController.forgotPassword);
 
 module.exports = authRouter;
