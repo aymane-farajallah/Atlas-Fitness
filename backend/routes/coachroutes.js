@@ -8,11 +8,11 @@ const checkCoachAdmin = require('../middlewares/checkCoachAdmin');
 const checkAdmin = require("../middlewares/checkAdmin");
 coachroutes.use(express.json());
 
-coachroutes.get('/getall', isAuthenticated, checkAdmin , coachcontrollers.getAllCoaches);
+coachroutes.get('/getallcoaches', isAuthenticated, checkAdmin , coachcontrollers.getAllCoaches);
 coachroutes.get('/getcoach/:id', isAuthenticated, coachcontrollers.getCoachById);
-coachroutes.get('/filter', isAuthenticated, checkUserAdmin , coachcontrollers.getCoachByFilter);
+coachroutes.get('/filtercoach', isAuthenticated, checkUserAdmin , coachcontrollers.getCoachByFilter);
 coachroutes.put('/putcoach/:id', isAuthenticated, createCoachValidationRules(), validate , checkCoachAdmin , coachcontrollers.updateCoachById);
-coachroutes.delete('/delete/:id', isAuthenticated, checkCoachAdmin , coachcontrollers.deleteCoachById);
+coachroutes.delete('/deletecoach/:id', isAuthenticated, checkCoachAdmin , coachcontrollers.deleteCoachById);
 
 
 module.exports = coachroutes ;

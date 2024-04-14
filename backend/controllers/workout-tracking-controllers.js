@@ -1,10 +1,12 @@
 const Workout = require("../models/workout-tracking");
 const mongoose = require("mongoose");
+
 //get all workouts
 const getWorkouts = async (req, res) => {
   const workouts = await Workout.find({}).sort({ createdAt: -1 });
   res.status(200).json(workouts);
 };
+
 // get a single workout
 const getWorkout = async (req, res) => {
   const { id } = req.params;
@@ -25,9 +27,10 @@ const createWorkout = async (req, res) => {
     const workout = await Workout.create({ title, load, reps });
     res.status(200).json(workout);
   } catch (err) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: err.message });
   }
 };
+
 // delete a workout
 const deleteWorkout = async (req, res) => {
   const { id } = req.params;
