@@ -28,7 +28,7 @@ const coachSchema = new Schema({
   gender: {
   type: String,
   required: true,
-  enum: ['man','women']
+  enum: ['man','woman']
   },
  
   city: {
