@@ -32,12 +32,10 @@ const coachSchema = new Schema({
   },
  
   city: {
-  required: true,
   type: String
   },
 
   address: {
-  required: true,
   type: String
   },
 

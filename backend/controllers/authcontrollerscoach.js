@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
+const multer = require('multer');
 
 /**
  * @swagger
@@ -48,12 +49,17 @@ const sendMailUser = require("../services/emailservice");
 // Register function
 const registercoach = async (req, res) => {
   try {
+
+    if (!req.file) {
+      return res.status(400).send({ error: 'coach image is required' });
+    }
+
     const { fullname, email, password, gender, city, address } = req.body;
 
     const existingcoach = await coach.findOne({ email });
     if (existingcoach) {
-      return res.status(400).json({ err: "coach already exists" });
-    };
+      return res.status(400).json({ err: 'coach already exists' });
+    }
 
     const newcoach = new coach({
       fullname,
@@ -62,19 +68,20 @@ const registercoach = async (req, res) => {
       gender,
       city,
       address,
+      image: req.file.filename,
     });
+
     
-    // Hash and secure password
     const salt = await bcrypt.genSalt(10);
     newcoach.password = await bcrypt.hash(newcoach.password, salt);
 
-    // Save new coach to database
+   
     await newcoach.save();
 
-    res.status(200).json({ message: "coach registered successfully" });
+    res.status(200).json({ message: 'coach registered successfully' });
   } catch (error) {
-    console.error("Error registering coach:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error(error); 
+    res.status(400).send({ error: 'An error occurred while registering coach' });
   }
 };
 
@@ -146,7 +153,7 @@ logincoach = (req, res) => {
               res.json({ success: true, token: "Bearer " + token });
             });
           } else {
-            // displaying that the user has a wrong password
+            // displaying that the has a wrong password
             res.status(400).json({ message: "Email or Password are incorrect" });
           }
         })
@@ -198,12 +205,12 @@ logincoach = (req, res) => {
 
 // Forgot password function
 forgotPassword = (req, res) => {
-  //asking for the email of our user and checking if it exists
+  //asking for the email of our and checking if it exists
   const { email } = req.body;
   User.findOne({ email })
     .then(async (user) => {
       if (!user) {
-        return res.status(404).json({ err: "user not found" });
+        return res.status(404).json({ err: "coach not found" });
       }
       // asigning the user to userForget to be used later
       const userForgot = user;
