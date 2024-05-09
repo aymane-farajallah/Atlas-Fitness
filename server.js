@@ -1,9 +1,13 @@
 require('dotenv').config();
 require('./backend/config/database');
 const express = require('express');
-var expressBusboy = require('express-busboy');
+const bodyParser = require("body-parser")
 const App = express();
-expressBusboy.extend(App);
+
+App.use(bodyParser.json());
+App.use(bodyParser.urlencoded({ extended: true }));
+
+const multer = require('multer');
 const port = 3111 ;
 const authroutesuser = require("./backend/routes/authroutesuser");
 const authroutescoach = require("./backend/routes/authroutescoach");
@@ -17,6 +21,7 @@ const messageRoute = require('./backend/routes/messageRoute');
 const { app, server } = require("./backend/utils/socket");
 const swaggerUi = require('swagger-ui-express');
 const specs = require('./backend/middlewares/swagger');
+
 
 App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 App.use('/users', userroutes);
