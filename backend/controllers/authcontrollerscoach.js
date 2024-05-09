@@ -49,41 +49,43 @@ const multer = require('multer');
 // Register function
 const registercoach = async (req, res) => {
   try {
-
-    if (!req.file) {
-      return res.status(400).send({ error: 'coach image is required' });
+    
+    if (!req.files || !req.files.image || !req.files.cv || !req.files.cin) {
+      return res.status(400).send({ error: 'All files (image, pdf1, pdf2) are required' });
     }
 
-    const { fullname, email, password, gender, city, address } = req.body;
+    const { fullname, email, password, gender, city, phone_number, address } = req.body;
 
-    const existingcoach = await coach.findOne({ email });
-    if (existingcoach) {
-      return res.status(400).json({ err: 'coach already exists' });
+    const existingCoach = await coach.findOne({ email });
+    if (existingCoach) {
+      return res.status(400).json({ error: 'Coach already exists' });
     }
 
-    const newcoach = new coach({
+    const newCoach = new coach({
       fullname,
       email,
       password,
       gender,
       city,
       address,
-      image: req.file.filename,
+      phone_number,
+      image: req.files.image[0].filename,
+      cin: req.files.cin[0].filename, 
+      cv: req.files.cv[0].filename,
     });
 
-    
     const salt = await bcrypt.genSalt(10);
-    newcoach.password = await bcrypt.hash(newcoach.password, salt);
+    newCoach.password = await bcrypt.hash(newCoach.password, salt);
 
-   
-    await newcoach.save();
+    await newCoach.save();
 
-    res.status(200).json({ message: 'coach registered successfully' });
+    res.status(200).json({ message: 'Coach registered successfully' });
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(400).send({ error: 'An error occurred while registering coach' });
   }
 };
+
 
 /**
  * @swagger

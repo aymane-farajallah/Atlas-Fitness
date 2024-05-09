@@ -28,7 +28,7 @@ const coachSchema = new Schema({
   gender: {
   type: String,
   required: true,
-  enum: ['man','women']
+  enum: ['male','female']
   },
  
   city: {
@@ -67,6 +67,10 @@ const coachSchema = new Schema({
 
   cv: {
   type: String  
+  },
+
+  cin: {
+    type: String  
   },
   
   availability: {
