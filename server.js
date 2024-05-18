@@ -1,29 +1,49 @@
 require('./backend/config/database');
+
+
+
 const express = require('express');
-const app = express();
-const port = 3111 ;
+var expressBusboy = require('express-busboy');
+const App = express();
+expressBusboy.extend(App);
 const authroutesuser = require("./backend/routes/authroutesuser");
 const authroutescoach = require("./backend/routes/authroutescoach");
 const coachroutes = require('./backend/routes/coachroutes');
 const reviewRoute = require('./backend/routes/reviewroutes');
 const workoutRoute = require('./backend/routes/working-tracking-route');
 const messageRoute = require('./backend/routes/messageRoute');
-import { app, server } from "./utils/socket.js";
+const { app, server } = require("./backend/utils/socket");
+const swaggerUi = require('swagger-ui-express');
+const specs = require('./backend/middlewares/swagger');
+const morgan = require('morgan');
+const cors = require('cors');
+
+
+App.use(cors(
+    {
+        origin: 'http://localhost:3000',
+        credentials: true,
+    }
+));
 
 
 
-app.use(express.json());
-require('dotenv').config();
+App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+App.use('/users', userroutes);
+App.use('/coaches', coachroutes);
+App.use("/api", authroutesuser);
+App.use("/api", authroutescoach);
+App.use("/api", bookingRoutes);
+App.use("/api", reviewRoute);
+App.use("/api", reportRoute);
+App.use("/workout", workoutRoute);
+App.use("/messages", messageRoute);
+App.use(morgan('dev'));
 
 
-app.use('/coaches', coachroutes);
-app.use("/api", authroutesuser);
-app.use("/api", authroutescoach);
-app.use("/reviews", reviewRoute);
-app.use("/workout", workoutRoute);
-app.use("/messages", messageRoute);
 
 
-app.listen(port , (req , res)=>{
+App.listen(process.env.PORT , (req ,res)=>{
     console.log("SERVER IS WORKING");
 })
+

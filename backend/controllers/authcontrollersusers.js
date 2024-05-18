@@ -6,7 +6,7 @@ const sendMailUser = require("../services/emailservice");
 // Register function
 registerUser = async (req, res) => {
   try {
-    const { fullname, email, password, gender } = req.body;
+    const { fullname, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -16,8 +16,7 @@ registerUser = async (req, res) => {
     const newUser = new User({
       fullname,
       email,
-      password,
-      gender
+      password
     });
     // Hash and secure password
     const salt = await bcrypt.genSalt(10);
@@ -29,10 +28,53 @@ registerUser = async (req, res) => {
     res.json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error registering user:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error 1" });
 
   }
 };
+
+/**
+ * @swagger
+ * /api/loginuser:
+ *   post:
+ *     summary: Login a User
+ *     description: Allows a registered user to login to the platform.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: user's registered email address used for login. (Matches the 'email' field in the user model)
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 description: user's password. (Not stored in plain text, but a hashed version. Matches the 'password' field in the user model)
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Login success indicator
+ *                 token:
+ *                   type: string
+ *                   description: JWT access token (prefixed with "Bearer ")
+ *       400:
+ *         description: Bad Request (missing fields, invalid credentials)
+ *       404:
+ *         description: user not found (user with the provided email address not found in the database)
+ *       500:
+ *         description: Internal server error
+ */
 
 // Login function
 loginUser = (req, res) => {
@@ -137,4 +179,22 @@ resetPassword = async (req, res) => {
     return res.status(500).json({ error: "Internal server error in reset" });
   }
 };
-module.exports = { registerUser, loginUser, resetPassword, forgotPassword };
+const getUserSettings = async (req, res) => {
+  // Example implementation for user settings
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({
+      email: user.email,
+      fullname: user.fullname,
+      // add other user settings here
+    });
+  } catch (error) {
+    console.error("Error fetching user settings:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+module.exports = { registerUser, loginUser, resetPassword, forgotPassword, getUserSettings };
