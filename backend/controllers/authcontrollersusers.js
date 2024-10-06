@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
+const multer = require('multer');
 
 /**
  * @swagger
@@ -47,7 +48,12 @@ const sendMailUser = require("../services/emailservice");
 
 registerUser = async (req, res) => {
   try {
-    const { fullname, email, password, gender } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send({ error: 'User image is required' });
+    }
+
+    const { fullname, email, password , gender } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -58,8 +64,8 @@ registerUser = async (req, res) => {
       fullname,
       email,
       password,
-      gender
-
+      gender,
+      image: req.file.filename,
     });
     
     const salt = await bcrypt.genSalt(10);
